@@ -29,8 +29,41 @@ function toPlainText(value: unknown) {
   return "";
 }
 
+function stripWrappingQuotes(value: string) {
+  if (
+    (value.startsWith('"') && value.endsWith('"')) ||
+    (value.startsWith("'") && value.endsWith("'"))
+  ) {
+    return value.slice(1, -1);
+  }
+
+  return value;
+}
+
 function normalizePrivateKey(privateKey: string) {
-  return privateKey.replace(/\\n/g, "\n").trim();
+  return stripWrappingQuotes(privateKey.trim())
+    .replace(/\\r\\n/g, "\n")
+    .replace(/\\n/g, "\n")
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n")
+    .trim();
+}
+
+function resolvePrivateKey(rawValue: string) {
+  const trimmedValue = rawValue.trim();
+
+  if (trimmedValue.startsWith("{")) {
+    try {
+      const parsedValue = JSON.parse(trimmedValue) as { private_key?: unknown };
+      if (typeof parsedValue.private_key === "string" && parsedValue.private_key.trim()) {
+        return normalizePrivateKey(parsedValue.private_key);
+      }
+    } catch {
+      // Fall back to the raw value below.
+    }
+  }
+
+  return normalizePrivateKey(trimmedValue);
 }
 
 function buildSheetsClient() {
@@ -44,7 +77,7 @@ function buildSheetsClient() {
 
   const auth = new google.auth.JWT({
     email: clientEmail,
-    key: normalizePrivateKey(privateKey),
+    key: resolvePrivateKey(privateKey),
     scopes: spreadsheetScopes,
   });
 
