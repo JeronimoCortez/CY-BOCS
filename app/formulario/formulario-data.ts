@@ -302,8 +302,12 @@ function toSheetBoolean(value: boolean) {
   return value ? "Sí" : "No";
 }
 
+export function toSheetText(value: string | null | undefined) {
+  return value && value.trim() ? value : "-";
+}
+
 function toSheetNumber(value: number | null) {
-  return value === null ? "" : value;
+  return value === null ? "-" : value;
 }
 
 function sumIncludedScores(items: readonly ScoreItem[], scores: Record<string, ScoreEntry>) {
@@ -323,8 +327,8 @@ export function buildObsessionChecklistRow(
 ) {
   return [
     timestamp,
-    formData.paciente.nombrePaciente,
-    formData.paciente.expediente,
+    toSheetText(formData.paciente.nombrePaciente),
+    toSheetText(formData.paciente.expediente),
     ...collectChecklistKeys(obsessionChecklistGroups).flatMap((key) => {
       const entry = formData.obsesionesChecklist[key as ObsessionChecklistKey];
       return [toSheetBoolean(entry.presente), toSheetBoolean(entry.emsp)];
@@ -338,8 +342,8 @@ export function buildCompulsionChecklistRow(
 ) {
   return [
     timestamp,
-    formData.paciente.nombrePaciente,
-    formData.paciente.expediente,
+    toSheetText(formData.paciente.nombrePaciente),
+    toSheetText(formData.paciente.expediente),
     ...collectChecklistKeys(compulsionsChecklistGroups).flatMap((key) => {
       const entry = formData.compulsionesChecklist[key as CompulsionChecklistKey];
       return [toSheetBoolean(entry.presente), toSheetBoolean(entry.emsp)];
@@ -367,8 +371,8 @@ export function buildScoreRow(formData: FormularioState, timestamp: string) {
 
   return [
     timestamp,
-    formData.paciente.nombrePaciente,
-    formData.paciente.expediente,
+    toSheetText(formData.paciente.nombrePaciente),
+    toSheetText(formData.paciente.expediente),
     ...scoreCells,
     obsessionTotal,
     compulsionTotal,

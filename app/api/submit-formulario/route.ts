@@ -7,6 +7,7 @@ import {
   getCompulsionChecklistHeaders,
   getObsessionChecklistHeaders,
   getScoreHeaders,
+  toSheetText,
   type FormularioState,
 } from "@/app/formulario/formulario-data";
 
@@ -155,12 +156,12 @@ export async function POST(request: Request) {
       ["timestamp", "nombrePaciente", "nombreEvaluador", "fecha", "lugar", "edad", "expediente"],
       [
         timestamp,
-        body.paciente.nombrePaciente,
-        body.paciente.nombreEvaluador,
-        body.paciente.fecha,
-        body.paciente.lugar,
-        body.paciente.edad,
-        body.paciente.expediente,
+        toSheetText(body.paciente.nombrePaciente),
+        toSheetText(body.paciente.nombreEvaluador),
+        toSheetText(body.paciente.fecha),
+        toSheetText(body.paciente.lugar),
+        toSheetText(body.paciente.edad),
+        toSheetText(body.paciente.expediente),
       ],
     );
 

@@ -23,4 +23,11 @@ body {
     linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgb(15 23 42);
+  color: #ffffff;
 }

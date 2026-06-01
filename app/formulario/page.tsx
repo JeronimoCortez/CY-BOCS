@@ -51,7 +51,7 @@ function StepChip({
 }) {
   return (
     <div
-      className={`flex items-center gap-3 rounded-2xl border px-4 py-3 transition ${
+      className={`min-w-[220px] snap-start flex items-center gap-3 rounded-2xl border px-4 py-3 transition lg:min-w-0 ${
         active
           ? "border-slate-900 bg-slate-900 text-white shadow-lg shadow-slate-900/15"
           : "border-slate-200 bg-white/80 text-slate-600"
@@ -86,15 +86,17 @@ function SectionCard({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-3xl border border-slate-200 bg-white/90 p-5 shadow-[0_12px_40px_rgba(15,23,42,0.08)] backdrop-blur">
-      <div className="mb-5">
+    <section className="rounded-3xl border border-slate-200 bg-white/90 p-4 shadow-[0_12px_40px_rgba(15,23,42,0.08)] backdrop-blur sm:p-5 lg:p-6">
+      <div className="mb-4 sm:mb-5">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
           {eyebrow}
         </p>
-        <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">
+        <h2 className="mt-2 text-xl font-semibold tracking-tight text-slate-950 sm:text-2xl">
           {title}
         </h2>
-        {description ? <p className="mt-2 text-sm text-slate-600">{description}</p> : null}
+        {description ? (
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">{description}</p>
+        ) : null}
       </div>
       {children}
     </section>
@@ -124,7 +126,7 @@ function ScoreScaleLegend() {
       <summary className="cursor-pointer font-medium text-slate-800">
         Ver descripciones de la escala 0-4
       </summary>
-      <div className="mt-3 grid gap-2 md:grid-cols-2">
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
         {scaleDescriptions.map((item) => (
           <div key={item.value} className="rounded-xl bg-white px-3 py-2 shadow-sm">
             <div className="text-sm font-semibold text-slate-900">{item.label}</div>
@@ -148,7 +150,7 @@ function ChecklistGroupTable({
   onChange: (key: string, field: keyof ChecklistEntry, checked: boolean) => void;
 }) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-slate-200">
+    <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-200 bg-slate-50 px-4 py-3">
         <h3 className="text-base font-semibold text-slate-900">{title}</h3>
       </div>
@@ -159,14 +161,13 @@ function ChecklistGroupTable({
           return (
             <div
               key={item.key}
-              className="grid gap-3 px-4 py-4 md:grid-cols-[minmax(0,1fr)_140px_140px]"
+              className="grid gap-3 px-4 py-4 transition hover:bg-slate-50 md:grid-cols-[minmax(0,1fr)_140px_140px]"
             >
               <div className="min-w-0">
                 <p className="font-medium text-slate-900">{item.label}</p>
-                <p className="text-xs text-slate-500">Clave: {item.key}</p>
               </div>
-              <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700">
-              <input
+              <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 transition hover:bg-white">
+                <input
                   type="checkbox"
                   checked={entry.presente}
                   onChange={(event) => onChange(item.key, "presente", event.target.checked)}
@@ -174,14 +175,19 @@ function ChecklistGroupTable({
                 />
                 Presente
               </label>
-              <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700">
+              <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 transition hover:bg-white">
                 <input
                   type="checkbox"
                   checked={entry.emsp}
                   onChange={(event) => onChange(item.key, "emsp", event.target.checked)}
                   className="h-4 w-4 cursor-pointer rounded border-slate-300 text-slate-900 focus:ring-slate-900"
                 />
-                EMSP
+                <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                  <span className="font-medium text-slate-800 whitespace-nowrap">EMSP</span>
+                  <span className="text-xs leading-tight text-slate-500">
+                    (episodio más severo en el pasado)
+                  </span>
+                </span>
               </label>
             </div>
           );
@@ -205,7 +211,7 @@ function ScoreItemCard({
   onChange: (key: string, field: keyof ScoreEntry, nextValue: number | null) => void;
 }) {
   return (
-    <section className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+    <section className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4 shadow-sm sm:p-5">
       <div className="flex flex-wrap items-center gap-2">
         <h3 className="text-base font-semibold text-slate-950">{title}</h3>
         {!includeInTotal ? (
@@ -214,8 +220,7 @@ function ScoreItemCard({
           </span>
         ) : null}
       </div>
-      <p className="mt-1 text-xs text-slate-500">Clave: {itemKey}</p>
-      <div className="mt-4 grid gap-3 md:grid-cols-3">
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
         {[
           ["padre", "Padre"],
           ["nino", "Niño"],
@@ -273,8 +278,8 @@ function SummaryList({
   badge?: string;
 }) {
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-4">
-      <div className="flex items-center justify-between gap-3">
+    <section className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:p-4">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="font-semibold text-slate-950">{title}</h3>
         {badge ? (
           <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-700">
@@ -289,18 +294,17 @@ function SummaryList({
           return (
             <div
               key={item.key}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-slate-50 px-3 py-2"
+              className="flex flex-col gap-3 rounded-xl bg-slate-50 px-3 py-3 sm:flex-row sm:items-center sm:justify-between"
             >
               <div>
                 <div className="font-medium text-slate-900">{item.label}</div>
-                <div className="text-xs text-slate-500">{item.key}</div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${entry.presente ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600"}`}>
                   Presente: {entry.presente ? "Sí" : "No"}
                 </span>
                 <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${entry.emsp ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600"}`}>
-                  EMSP: {entry.emsp ? "Sí" : "No"}
+                  EMSP: {entry.emsp ? "Sí" : "No"} (episodio más severo en el pasado)
                 </span>
               </div>
             </div>
@@ -337,10 +341,9 @@ function ScoreSummary({
           return (
             <div key={item.key} className="rounded-xl bg-slate-50 px-3 py-3">
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <div className="font-medium text-slate-900">{item.title}</div>
-                  <div className="text-xs text-slate-500">{item.key}</div>
-                </div>
+              <div>
+                <div className="font-medium text-slate-900">{item.title}</div>
+              </div>
                 {!item.includeInTotal ? (
                   <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-800">
                     No se incluye en el puntaje total
@@ -559,15 +562,15 @@ export default function FormularioPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.12),_transparent_32%),linear-gradient(180deg,_#f8fafc_0%,_#eef2ff_100%)] px-4 py-8 text-slate-900">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
-        <header className="rounded-[2rem] border border-slate-200 bg-white/90 p-6 shadow-[0_12px_40px_rgba(15,23,42,0.08)] backdrop-blur">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.12),_transparent_32%),linear-gradient(180deg,_#f8fafc_0%,_#eef2ff_100%)] px-3 py-4 text-slate-900 sm:px-4 sm:py-6 lg:px-6 lg:py-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 sm:gap-6">
+        <header className="rounded-[2rem] border border-slate-200 bg-white/90 p-4 shadow-[0_12px_40px_rgba(15,23,42,0.08)] backdrop-blur sm:p-6 lg:p-8">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
                 Formulario CY-BOCS
               </p>
-              <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 md:text-4xl">
+              <h1 className="mt-3 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl md:text-4xl">
                 Registro publico
               </h1>
               <p className="mt-3 text-sm leading-6 text-slate-600">
@@ -577,7 +580,7 @@ export default function FormularioPage() {
               </p>
             </div>
 
-            <div className="rounded-2xl bg-slate-950 px-4 py-3 text-white">
+            <div className="w-full rounded-2xl bg-slate-950 px-4 py-3 text-white lg:w-auto">
               <p className="text-xs uppercase tracking-[0.2em] text-slate-300">Total general</p>
               <p className="mt-1 text-3xl font-semibold">{totals.totalGeneral}</p>
               <p className="text-sm text-slate-300">
@@ -586,20 +589,20 @@ export default function FormularioPage() {
             </div>
           </div>
 
-          <div className="mt-6 grid gap-3 lg:grid-cols-6">
+          <div className="mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 lg:grid lg:grid-cols-6 lg:overflow-visible lg:pb-0">
             {steps.map((step, index) => (
               <StepChip key={step} index={index} label={step} active={index === activeStep} />
             ))}
           </div>
 
-          <div className="mt-6 h-2 overflow-hidden rounded-full bg-slate-100">
+          <div className="mt-5 h-2 overflow-hidden rounded-full bg-slate-100">
             <div
               className="h-full rounded-full bg-slate-950 transition-all duration-300"
               style={{ width: `${((activeStep + 1) / steps.length) * 100}%` }}
             />
           </div>
 
-          <div className="mt-6 grid gap-3 md:grid-cols-3">
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
             <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
               <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Obsesiones</p>
               <p className="mt-1 text-2xl font-semibold text-slate-950">
@@ -633,7 +636,7 @@ export default function FormularioPage() {
               event.preventDefault();
             }
           }}
-          className="grid gap-6"
+          className="grid gap-5 sm:gap-6"
         >
           {activeStep === 0 ? (
             <SectionCard
@@ -641,7 +644,7 @@ export default function FormularioPage() {
               title="Datos del paciente"
               description="Registra la informacion basica antes de continuar al checklist y las puntuaciones."
             >
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2">
                 {[
                   {
                     field: "nombrePaciente" as const,
@@ -654,13 +657,7 @@ export default function FormularioPage() {
                     required: false,
                   },
                   { field: "fecha" as const, label: "Fecha", required: true },
-                  { field: "lugar" as const, label: "Lugar", required: false },
                   { field: "edad" as const, label: "Edad", required: false },
-                  {
-                    field: "expediente" as const,
-                    label: "Expediente",
-                    required: false,
-                  },
                 ].map(({ field, label, required }) => (
                   <div key={field}>
                     <FieldLabel
@@ -668,16 +665,16 @@ export default function FormularioPage() {
                       label={label}
                       hint={required ? "Obligatorio" : undefined}
                     />
-                  <input
-                    id={field}
-                    type={field === "fecha" ? "date" : "text"}
-                    value={formData.paciente[field]}
-                    onChange={(event) => updatePaciente(field, event.target.value)}
-                    disabled={isSubmitting}
-                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:bg-slate-50"
-                  />
-                </div>
-              ))}
+                    <input
+                      id={field}
+                      type={field === "fecha" ? "date" : "text"}
+                      value={formData.paciente[field]}
+                      onChange={(event) => updatePaciente(field, event.target.value)}
+                      disabled={isSubmitting}
+                      className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:bg-slate-50"
+                    />
+                  </div>
+                ))}
               </div>
 
               {stepError ? (
@@ -692,8 +689,11 @@ export default function FormularioPage() {
             <SectionCard
               eyebrow="Paso 2"
               title="Obsesiones - Checklist"
-              description="Marca Presente y EMSP por cada sintoma, agrupado por categoria."
+              description='Marque con una "X" todos los síntomas presentes (considere presente lo que se describe en la última semana) o en el pasado (considere síntomas presentes en el episodio más severo en el pasado (EMSP).'
             >
+              <p className="mb-4 text-sm leading-6 text-slate-600">
+                Presento o he presentado preocupación por... 
+              </p>
               <div className="grid gap-4">
                 {getChecklistGroups("obsesiones").map((group) => (
                   <ChecklistGroupTable
@@ -714,8 +714,11 @@ export default function FormularioPage() {
             <SectionCard
               eyebrow="Paso 3"
               title="Compulsiones - Checklist"
-              description="Marca Presente y EMSP por cada conducta compulsiva, agrupada por categoria."
+              description='Marque con una "X" todos los síntomas presentes (considere presente lo que se describe en la última semana) o en el pasado (considere síntomas presentes en el episodio más severo en el pasado (EMSP).'
             >
+              <p className="mb-4 text-sm leading-6 text-slate-600">
+                Presento o he presentado conductas compulsivas o rituales como... 
+              </p>
               <div className="grid gap-4">
                 {getChecklistGroups("compulsiones").map((group) => (
                   <ChecklistGroupTable
@@ -803,9 +806,7 @@ export default function FormularioPage() {
                         ["Nombre del paciente", formData.paciente.nombrePaciente],
                         ["Nombre del evaluador", formData.paciente.nombreEvaluador],
                         ["Fecha", formData.paciente.fecha],
-                        ["Lugar", formData.paciente.lugar],
                         ["Edad", formData.paciente.edad],
-                        ["Expediente", formData.paciente.expediente],
                       ].map(([label, value]) => (
                         <div key={label} className="rounded-xl bg-slate-50 px-3 py-2">
                           <div className="text-xs uppercase tracking-[0.16em] text-slate-500">
@@ -886,26 +887,26 @@ export default function FormularioPage() {
             </SectionCard>
           ) : null}
 
-          <div className="flex flex-col gap-3 rounded-3xl border border-slate-200 bg-white/90 p-4 shadow-[0_12px_40px_rgba(15,23,42,0.08)] sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 rounded-3xl border border-slate-200 bg-white/90 p-4 shadow-[0_12px_40px_rgba(15,23,42,0.08)] backdrop-blur sm:flex-row sm:items-center sm:justify-between sm:p-5">
             <div className="text-sm text-slate-600">
               Paso actual: <span className="font-semibold text-slate-900">{steps[activeStep]}</span>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
-                  <button
-                    type="button"
-                    onClick={handleBack}
-                    disabled={activeStep === 0 || isSubmitting}
-                    className="cursor-pointer rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    Anterior
-                  </button>
+              <button
+                type="button"
+                onClick={handleBack}
+                disabled={activeStep === 0 || isSubmitting}
+                className="cursor-pointer rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 sm:min-w-32"
+              >
+                Anterior
+              </button>
 
               {activeStep < 5 ? (
                 <button
                   type="button"
                   onClick={handleNext}
                   disabled={isSubmitting}
-                  className="cursor-pointer rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="cursor-pointer rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:min-w-32"
                 >
                   Siguiente
                 </button>
@@ -916,7 +917,7 @@ export default function FormularioPage() {
                     void handleFinalSubmit();
                   }}
                   disabled={isSubmitting}
-                  className="cursor-pointer rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="cursor-pointer rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:min-w-36"
                 >
                   {isSubmitting ? "Enviando..." : "Enviar formulario"}
                 </button>
